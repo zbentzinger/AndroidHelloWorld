@@ -1,6 +1,7 @@
 package com.example.helloworld;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +12,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CursorAdapter;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +36,30 @@ public class MainActivity extends AppCompatActivity {
         });
 
         insertNote("New Note");
+
+        Cursor cursor = getContentResolver().query(
+                DatabaseContentProvider.CONTENT_URI,
+                DatabaseOpenHelper.ALL_COLS,
+                null,
+                null,
+                null,
+                null
+        );
+
+        String[] from = {DatabaseOpenHelper.NOTE_BODY};
+        int[] to = {android.R.id.text1};
+
+        CursorAdapter adapter = new SimpleCursorAdapter(
+                this,
+                android.R.layout.simple_list_item_1,
+                cursor,
+                from,
+                to,
+                0
+        );
+
+        ListView list = findViewById(android.R.id.list);
+        list.setAdapter(adapter);
 
         Log.d(TAG, "Loading MainActivity");
 
