@@ -1,6 +1,9 @@
 package com.example.helloworld;
 
+import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,14 +19,18 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "MainActivity";
+
+    private CursorAdapter adapter;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -37,22 +44,13 @@ public class MainActivity extends AppCompatActivity {
 
         insertNote("New Note");
 
-        Cursor cursor = getContentResolver().query(
-                DatabaseContentProvider.CONTENT_URI,
-                DatabaseOpenHelper.ALL_COLS,
-                null,
-                null,
-                null,
-                null
-        );
-
         String[] from = {DatabaseOpenHelper.NOTE_BODY};
         int[] to = {android.R.id.text1};
 
-        CursorAdapter adapter = new SimpleCursorAdapter(
+        adapter = new SimpleCursorAdapter(
                 this,
                 android.R.layout.simple_list_item_1,
-                cursor,
+                null,
                 from,
                 to,
                 0
@@ -60,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
 
         ListView list = findViewById(android.R.id.list);
         list.setAdapter(adapter);
+
+        getLoaderManager().initLoader(0, null, this);
 
         Log.d(TAG, "Loading MainActivity");
 
@@ -102,4 +102,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        return new CursorLoader(
+                this,
+                DatabaseContentProvider.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+
+    }
+
+    @Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        adapter.swapCursor(data);
+
+    }
+
+    @Override public void onLoaderReset(Loader<Cursor> loader) {
+
+        adapter.swapCursor(null);
+
+    }
 }
