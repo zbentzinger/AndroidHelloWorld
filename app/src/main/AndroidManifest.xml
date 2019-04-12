@@ -16,6 +16,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -23,5 +24,14 @@
             android:name=".DatabaseContentProvider"
             android:authorities="com.example.helloworld.databasecontentprovider"
             android:exported="false" />
+        <activity
+            android:name=".NoteEditorActivity"
+            android:label="@string/note_editor_header_label"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.helloworld.MainActivity" />
+        </activity>
     </application>
 </manifest>

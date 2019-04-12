@@ -6,4 +6,7 @@
     <string name="are_you_sure">Are you sure?</string>
     <string name="todo">TODO</string>
     <string name="foo">foo</string>
+    <string name="title_activity_note_editor">NoteEditorActivity</string>
+    <string name="textview">TextView</string>
+    <string name="note_editor_header_label">Note Editor</string>
 </resources>
