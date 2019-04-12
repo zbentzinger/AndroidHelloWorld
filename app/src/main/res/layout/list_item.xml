@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:padding="4dp">
+    <ImageView
+        android:id="@+id/imageIcon"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/ic_event_note_green_24dp"
+        android:contentDescription="@string/todo" />
+    <TextView
+        android:id="@+id/listItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="4dp"
+        android:layout_toEndOf="@+id/imageIcon"
+        android:layout_toRightOf="@+id/imageIcon"
+        android:singleLine="true"
+        android:text="@string/foo"
+        android:textColor="@color/colorPrimaryText"
+        android:textSize="18sp" />
+</RelativeLayout>

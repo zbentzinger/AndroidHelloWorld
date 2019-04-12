@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -48,15 +47,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // TODO: remove this, eventually.
         insertNote("New Note");
 
-        String[] from = {DatabaseOpenHelper.NOTE_BODY};
-        int[] to = {android.R.id.text1};
-
-        adapter = new SimpleCursorAdapter(
+        adapter = new CustomCursorAdapter(
                 this,
-                android.R.layout.simple_list_item_1,
                 null,
-                from,
-                to,
                 0
         );
 
@@ -78,7 +71,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 content
         );
 
-        Log.d(TAG,"Inserted Note ID: " + noteUri.getLastPathSegment());
+        if (noteUri != null) {
+
+            Log.d(TAG,"Inserted Note ID: " + noteUri.getLastPathSegment());
+
+        }
 
     }
 
@@ -92,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override public boolean onOptionsItemSelected(MenuItem item) {
 
-        // Handle action bar item clicks here. The action bar will
+        // Handle action bar list_item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
