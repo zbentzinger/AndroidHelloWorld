@@ -8,8 +8,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -43,7 +43,7 @@ public class NoteEditorActivity extends AppCompatActivity {
 
         } else {
 
-            action = intent.ACTION_EDIT;
+            action = Intent.ACTION_EDIT;
             noteFilter = DatabaseOpenHelper.NOTE_ID + "=" + uri.getLastPathSegment();
 
             Cursor cursor = getContentResolver().query(
@@ -67,8 +67,18 @@ public class NoteEditorActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
+
+        if (action.equals(Intent.ACTION_EDIT)) {
+
+            getMenuInflater().inflate(R.menu.note_editor_menu, menu);
+
+        }
+
+        return true;
+    }
+
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
 
@@ -76,6 +86,10 @@ public class NoteEditorActivity extends AppCompatActivity {
 
             case android.R.id.home:
                 finishEditing();
+                break;
+
+            case R.id.action_delete:
+                deleteNote();
                 break;
 
         }
@@ -143,6 +157,18 @@ public class NoteEditorActivity extends AppCompatActivity {
     }
 
     private void deleteNote() {
+
+        getContentResolver().delete(
+                DatabaseContentProvider.CONTENT_URI,
+                noteFilter,
+                null
+        );
+
+        Toast.makeText(this, getString(R.string.note_deleted), Toast.LENGTH_SHORT).show();
+
+        setResult(RESULT_OK);
+        finish();
+
     }
 
     private void saveNote(String value) {

@@ -11,4 +11,6 @@
     <string name="note_editor_header_label">Note Editor</string>
     <string name="new_note_title">New Note</string>
     <string name="note_updated">Note Updated</string>
+    <string name="action_delete">Delete</string>
+    <string name="note_deleted">Note Deleted</string>
 </resources>
