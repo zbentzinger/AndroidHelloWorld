@@ -22,6 +22,8 @@ public class DatabaseContentProvider extends ContentProvider {
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH );
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
+    public static final String CONTENT_ITEM = "foo";
+
     static {
         uriMatcher.addURI(AUTHORITY, BASE_PATH, NOTES_ID);
         uriMatcher.addURI(AUTHORITY, BASE_PATH + "/#", NOTES_ID);

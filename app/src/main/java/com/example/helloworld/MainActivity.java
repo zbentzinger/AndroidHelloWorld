@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static final String TAG = "MainActivity";
 
+    private static final int EDITOR_REQUEST_CODE = 1337;
+
     private CursorAdapter adapter;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, NoteEditorActivity.class));
+                startActivityForResult(
+                        new Intent(
+                                MainActivity.this,
+                                NoteEditorActivity.class
+                        ),
+                        EDITOR_REQUEST_CODE
+                );
             }
         });
 
@@ -55,23 +63,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         getLoaderManager().initLoader(0, null, this);
 
         Log.d(TAG, "Loading MainActivity");
-
-    }
-
-    private void insertNote(String noteBody) {
-
-        ContentValues content = new ContentValues();
-        content.put(DatabaseOpenHelper.NOTE_BODY, noteBody);
-        Uri noteUri = getContentResolver().insert(
-                DatabaseContentProvider.CONTENT_URI,
-                content
-        );
-
-        if (noteUri != null) {
-
-            Log.d(TAG,"Inserted Note ID: " + noteUri.getLastPathSegment());
-
-        }
 
     }
 
@@ -171,4 +162,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         adapter.swapCursor(null);
 
     }
+
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == EDITOR_REQUEST_CODE && resultCode == RESULT_OK) {
+
+            restartLoader();
+
+        }
+
+    }
+
 }
