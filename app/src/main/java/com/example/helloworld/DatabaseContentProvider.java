@@ -25,7 +25,7 @@ public class DatabaseContentProvider extends ContentProvider {
     public static final String CONTENT_ITEM = "foo";
 
     static {
-        uriMatcher.addURI(AUTHORITY, BASE_PATH, NOTES_ID);
+        uriMatcher.addURI(AUTHORITY, BASE_PATH, NOTES);
         uriMatcher.addURI(AUTHORITY, BASE_PATH + "/#", NOTES_ID);
     }
 
@@ -43,6 +43,12 @@ public class DatabaseContentProvider extends ContentProvider {
     @Override public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
         Log.d(TAG, "Running query against the database");
+
+        if (uriMatcher.match(uri) == NOTES_ID) {
+
+            selection = DatabaseOpenHelper.NOTE_ID + "=" + uri.getLastPathSegment();
+
+        }
 
         return database.query(
                 DatabaseOpenHelper.NOTE_TABLE,

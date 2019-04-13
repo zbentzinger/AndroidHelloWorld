@@ -2,13 +2,16 @@ package com.example.helloworld;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class NoteEditorActivity extends AppCompatActivity {
 
@@ -16,6 +19,8 @@ public class NoteEditorActivity extends AppCompatActivity {
 
     private String action;
     private EditText editor;
+    private String noteFilter;
+    private String oldValue;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
 
@@ -35,6 +40,28 @@ public class NoteEditorActivity extends AppCompatActivity {
 
             action = Intent.ACTION_INSERT;
             setTitle(R.string.new_note_title);
+
+        } else {
+
+            action = intent.ACTION_EDIT;
+            noteFilter = DatabaseOpenHelper.NOTE_ID + "=" + uri.getLastPathSegment();
+
+            Cursor cursor = getContentResolver().query(
+                    uri,
+                    DatabaseOpenHelper.ALL_COLS,
+                    noteFilter,
+                    null,
+                    null
+            );
+
+            cursor.moveToFirst();
+            oldValue = cursor.getString(
+                    cursor.getColumnIndex(DatabaseOpenHelper.NOTE_BODY)
+            );
+
+            editor.setText(oldValue);
+
+            editor.requestFocus();
 
         }
 
@@ -74,6 +101,23 @@ public class NoteEditorActivity extends AppCompatActivity {
                     saveNote(noteBody);
 
                 }
+                break;
+
+            case Intent.ACTION_EDIT:
+
+                if (noteBody.length() == 0) {
+
+                    deleteNote();
+
+                } else if (oldValue.equals(noteBody)) {
+
+                    setResult(RESULT_CANCELED);
+
+                } else {
+                    
+                    updateNote(noteBody);
+                    
+                }
 
         }
 
@@ -81,24 +125,42 @@ public class NoteEditorActivity extends AppCompatActivity {
 
     }
 
+    private void updateNote(String value) {
+
+        ContentValues content = new ContentValues();
+        content.put(DatabaseOpenHelper.NOTE_BODY, value);
+        getContentResolver().update(
+                DatabaseContentProvider.CONTENT_URI,
+                content,
+                noteFilter,
+                null
+        );
+
+        Toast.makeText(this, getString(R.string.note_updated), Toast.LENGTH_SHORT).show();
+
+        setResult(RESULT_OK);
+
+    }
+
+    private void deleteNote() {
+    }
+
     private void saveNote(String value) {
 
         ContentValues content = new ContentValues();
-
         content.put(DatabaseOpenHelper.NOTE_BODY, value);
-
         Uri noteUri = getContentResolver().insert(
                 DatabaseContentProvider.CONTENT_URI,
                 content
         );
-
-        setResult(RESULT_OK);
 
         if (noteUri != null) {
 
             Log.d(TAG,"Inserted Note ID: " + noteUri.getLastPathSegment());
 
         }
+
+        setResult(RESULT_OK);
 
     }
 
