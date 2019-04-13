@@ -22,7 +22,7 @@
         android:cursorVisible="true"
         android:ems="10"
         android:gravity="top"
-        android:inputType="textMultiLine|textPersonName"
+        android:inputType="textMultiLine|textCapSentences"
         android:saveEnabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

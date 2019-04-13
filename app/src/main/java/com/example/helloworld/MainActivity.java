@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 0
         );
 
-        ListView list = findViewById(android.R.id.list);
+        ListView list = findViewById(R.id.list);
         list.setAdapter(adapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
